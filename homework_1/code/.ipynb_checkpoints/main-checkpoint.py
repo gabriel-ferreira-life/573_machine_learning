@@ -24,7 +24,7 @@ def visualize_features(X_train, y_train):
 def test_accuracy(X_train, y_train, X_test, y_test):
 	max_iter = [10, 30, 50, 100, 200]
 	for i, m_iter in enumerate(max_iter):
-		_, train_acc, test_acc = ltest_perceptron(m_iter, X_train, y_train, 
+		_, train_acc, test_acc = test_perceptron(m_iter, X_train, y_train, 
 												 X_test, y_test)
 		print("Case %d: max iteration:%d  train accuracy:%f  test accuracy: %f."
 			  %(i+1, m_iter, train_acc, test_acc))
