@@ -1,9 +1,10 @@
 import numpy as np
 import sys
 from helper import *
+import os
 
 
-def show_images(data):
+def show_images(data, save=True):
     """Show the input images and save them.
 
     Args:
@@ -15,8 +16,24 @@ def show_images(data):
         include them in your report
     """
     ### YOUR CODE HERE
+    directory = "../output/images/"
+    for i in range(0, data.shape[0]):
+        
+        image = data[i]
+        plt.imshow(image, cmap='gray')
+        plt.title(f'Image {i+1}')
 
+        if save == True:
+            # Check if directory exists, if not, create it
+            if not os.path.exists(directory):
+                os.makedirs(directory)
 
+            # Saving figure
+            plt.savefig(f'{directory}image_{i+1}.png')
+        else:
+            pass
+        
+        plt.show()
 
     ### END YOUR CODE
 
@@ -34,7 +51,35 @@ def show_features(X, y, save=True):
         in your report.
     """
     ### YOUR CODE HERE
+    directory = "../output/images/"
+    # Creating a scatter plot
+    plt.figure(figsize=(8, 5))
 
+    for i in range(len(X)):
+        if y[i] == 1.0:
+            plt.scatter(X[i, 0], X[i, 1], c='r', marker='*', label='Label 1' if (i==0 or i==1) else "")
+
+        elif y[i] == -1.0:
+            plt.scatter(X[i, 0], X[i, 1], c='b', marker='+', label='Label 5' if (i==0 or i==1) else "")
+
+    plt.xlabel('Sys')
+    plt.ylabel('Intense')
+    plt.title("2-D Scatter Plot")
+    plt.legend()
+
+
+    if save == True:
+        # Check if directory exists, if not, create it
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        # Saving figure
+        plt.savefig(f'{directory}dataset_labels.png')
+    else:
+        pass
+
+    plt.show()
+    
 
 
     ### END YOUR CODE
@@ -57,14 +102,38 @@ class Perceptron(object):
         """
         ### YOUR CODE HERE
         
+        # Define the max iterations
+        max_iter = self.max_iter
 
-        # After implementation, assign your weights w to self as below:
-        # self.W = w
+        # Initialize Weights
+        self.W = np.zeros(X.shape[1])
+        
+        # Loop through the number of iterations
+        for _ in range(max_iter):
+            # print(self.W)
+            # print("")
+            
+            # Loop through the dataset
+            for xi, target in zip(X, y):
+
+                # Compute predictions 
+                prediction = np.dot(xi, self.W)
+
+                # Apply Sign function to predictions
+                prediction_sign = np.where(prediction >= .00, 1, -1)
+
+                # print(xi, "--> Xi")
+                # print(self.W, "--> Weights") 
+                # print("Prediction: ", prediction, " prediction_sign: ", prediction_sign, " target: ", target)
+                # print("")
+                
+                # Update weights
+                self.W += (target - prediction_sign) * xi
         
         ### END YOUR CODE
         
         return self
-
+    
     def get_params(self):
         """Get parameters for this perceptron model.
 
@@ -86,8 +155,15 @@ class Perceptron(object):
             preds: An array of shape [n_samples,]. Only contains 1 or -1.
         """
         ### YOUR CODE HERE
+        # print(X, " * ", self.W)
 
+        # Compute predictions 
+        prediction = np.dot(X, self.W)
 
+        # Apply Sign function to predictions
+        prediction_sign = np.where(prediction >= .00, 1, -1)
+
+        return prediction_sign
 
         ### END YOUR CODE
 
@@ -103,14 +179,20 @@ class Perceptron(object):
         """
         ### YOUR CODE HERE
 
+        # Predict the class labels for the samples in X
+        predictions = self.predict(X)
 
+        # Compare predictions with the actual labels and calculate accuracy
+        accuracy = np.mean(predictions == y)
+        
+        return accuracy
 
         ### END YOUR CODE
 
 
 
 
-def show_result(X, y, W):
+def show_result(X, y, W,  save=True):
     """Plot the linear model after training. 
        You can call show_features with 'save' being False for convenience.
 
@@ -124,8 +206,47 @@ def show_result(X, y, W):
         in your report.
     """
     ### YOUR CODE HERE
+    
+    # Creating a scatter plot
+    plt.figure(figsize=(8, 5))
+
+    for i in range(len(X)):
+        if y[i] == 1.0:
+            plt.scatter(X[i, 0], X[i, 1], c='r', marker='*', label='Label 1' if (i==0 or i==1) else "")
+
+        elif y[i] == -1.0:
+            plt.scatter(X[i, 0], X[i, 1], c='b', marker='+', label='Label 5' if (i==0 or i==1) else "")
 
 
+    # Plot the decision boundary
+    x1_values = X[:,0]
+    x2_values = - (W[1] / W[2]) * x1_values - (W[0] / W[2])
+    plt.plot(x1_values, x2_values, label='Decision Boundary')
+
+    # Set plot limits
+    plt.xlim(min(X[:, 0]), max(X[:, 0]))
+    plt.ylim(min(X[:, 1]), max(X[:, 1]))
+
+    # Adding labels and title
+    plt.xlabel('Sys')
+    plt.ylabel('Intense')
+    plt.title('Perceptron Results')
+    plt.legend()
+    
+    if save == True:
+        # Defined directory to save image output
+        directory = "../output/images/"
+
+        # Check if directory exists, if not, create it
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        # Saving figure
+        plt.savefig(f'{directory}model_results.png')
+    else:
+        pass
+    
+    plt.show()
 
     ### END YOUR CODE
 
@@ -142,4 +263,4 @@ def test_perceptron(max_iter, X_train, y_train, X_test, y_test):
     # test perceptron model
     test_acc = model.score(X_test, y_test)
 
-    return W, train_acc, test_acc
+    return W, train_acc, test_acc 
