@@ -142,4 +142,4 @@ def test_perceptron(max_iter, X_train, y_train, X_test, y_test):
     # test perceptron model
     test_acc = model.score(X_test, y_test)
 
-    return W, train_acc, test_acc
+    return W, train_acc, test_acc 
