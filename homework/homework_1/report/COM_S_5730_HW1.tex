@@ -1,4 +1,4 @@
-\documentclass[11pt]{article}
+ \documentclass[11pt]{article}
 
 % Use Helvetica font.
 %\usepackage{helvet}
@@ -7,6 +7,9 @@
 %\usepackage[sc]{mathpazo}
 \usepackage{color}
 \usepackage{amsmath,amsthm,amssymb,multirow,paralist}
+\usepackage{graphicx}
+\usepackage{float}
+
 %\renewcommand{\familydefault}{\sfdefault}
 
 % Use 1/2-inch margins.
@@ -57,19 +60,87 @@ the first coordinate is fixed at 1.
     x) = +1$ and $h(\boldsymbol x) = -1$ are separated by a line.
     If we express this line by the equation $x_2 = ax_1 + b$,
     what are the slope $a$ and intercept $b$ in terms of $w_0, w_1,
-    w_2$?
+    w_2$?\\
+
+    \textbf{Answer:}
+\[h(x) = \text{sign}(w^T x) = \text{sign}(w_0 + w_1 x_1 + w_2 x_2)\]
+
+The line equation is given by:
+\[x_2 = a x_1 + b\]
+
+The decision boundary occurs when $h(x) = 0$, so we have the following:
+\[w_0 + w_1 x_1 + w_2 x_2 = 0\]
+Solving for $x_2$:
+\[w_2 x_2 = -w_1 x_1 - w_0\]
+\[x_2 = - \frac{w_1}{w_2} x_1 - \frac{w_0}{w_2}\]
+
+Here, $-\frac{w_1}{w_2}$ is the \textbf{slope}, and $-\frac{w_0}{w_2}$ is the \textbf{intercept}. \\
+
     \item (5 points) Draw pictures for the cases $\boldsymbol w=[1,2,3]^T$
     and $\boldsymbol w=-[1,2,3]^T$. Label the positive and negative
-    prediction regions on the pictures.
-\end{enumerate}
+    prediction regions on the pictures.\\
 
+        \textbf{Answer:}
+\[x_2 = - \frac{w_1}{w_2} x_1 - \frac{w_0}{w_2}\]
+
+\textbf{Case:} $W = [1, 2, 3]^T$\vspace{0.5cm}
+
+\begin{minipage}{0.45\textwidth}
+    \textbf{$\boldsymbol{x_1 = -1}$}\\
+    $x_2 = - \frac{2}{3}(-1) - \frac{1}{3}$\\
+    $x_2 = 0.33$
+\end{minipage}
+\hfill % This will add space between the two minipages
+\begin{minipage}{0.45\textwidth}
+    \textbf{$\boldsymbol{x_1 = 1}$}\\
+    $x_2 = - \frac{2}{3}(1) - \frac{1}{3}$\\
+    $x_2 = -1$
+\end{minipage}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/question1b_positive_weights.png}
+    \caption{Positive Weights}
+    \label{fig:enter-label}
+\end{figure}
+
+\textbf{Case:} $W = -[1, 2, 3]^T$\vspace{0.5cm}
+
+\begin{minipage}{0.45\textwidth}
+    \textbf{$\boldsymbol{x_1 = -1}$}\\
+    $x_2 = - \frac{-2}{-3}(-1) - \frac{-1}{-3}$\\
+    $x_2 = 0.33$
+\end{minipage}
+\hfill % This adds space between the two minipages
+\begin{minipage}{0.45\textwidth}
+    \textbf{$\boldsymbol{x_1 = 1}$}\\
+    $x_2 = - \frac{-2}{-3}(1) - \frac{-1}{-3}$\\
+    $x_2 = -1$
+\end{minipage}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.5\linewidth]{images/question1b_negative_weights.png}
+        \caption{Negative Weights}
+        \label{fig:enter-label}
+    \end{figure}
+
+
+\end{enumerate}
 \item (35 points) In logistic regression (labels are \{1, -1\}),
 the objective function  can be written as
 $$E(w)=\frac{1}{N}\sum_{n=1}^N\ln\left(1+e^{-y_n
 w^Tx_n}\right).$$ Please
 \begin{enumerate}
-\item (10 points) Compute the first-order derivative $\nabla E(w)$. You will
-need to provide the intermediate steps of derivation.
+\item (10 points) Compute the first-order derivative $\nabla E(w)$. You will need to provide the intermediate steps of derivation.\\
+
+    \textbf{Answer:}
+    
+The derivative rule for logarithmic functions $\frac{d}{dx}\ln(f(x))$ is $\frac{1}{f(x)}f'(x)$.
+\[\nabla E(w) = \frac{1}{N} \sum_{n=1}^N\frac{1}{1+e^{-y_nw^Tx_n}} \times -y_n x_n e^{-y_n w^T x_n}\]
+
+\[\nabla E(w) = \frac{1}{N} \sum_{n=1}^N\frac{-y_n x_n e^{-y_n w^T x_n}}{1+e^{-y_nw^Tx_n}}\]
+
 \item (10 points) Once the optimal $w$ is obtain, it will be used to make
 predictions as follows:
 \[ \mbox{Predicted class of }x =
@@ -82,7 +153,13 @@ where $\theta(z)=\frac{1}{1+e^{-z}}$.
 
 Explain why the decision boundary of logistic regression is still
 linear, though the linear signal $w^Tx$ is passed through a
-nonlinear function $\theta$ to compute the outcome of prediction.
+nonlinear function $\theta$ to compute the outcome of prediction.\\
+
+    \textbf{Answer:}
+
+The decision boundary in logistic regression remains linear because the classification decision is based on \( w^T x \). The sigmoid function \( \theta(w^T x) \) maps the linear output to a probability, and the decision boundary occurs where \( \theta(w^T x) = 0.5 \), which corresponds to \( w^T x = 0 \). This is a linear equation, so the decision boundary is linear.\\
+
+
 \item (10 points) Is the decision boundary still linear if the prediction rule
 is changed to the following? Justify briefly.
 \[ \mbox{Predicted class of }x =
@@ -91,9 +168,17 @@ is changed to the following? Justify briefly.
     -1  & \quad \text{if } \theta(w^Tx)<0.9\\
   \end{cases}
 \]
-\item (5 points) In light of your answers to the above two questions, what is
-the essential property of logistic regression that results in the
-linear decision boundary?
+
+    \textbf{Answer:}
+    
+Yes, it remains linear. The linearity of the boundary depends on $w^Tx = 0$, not in the threshold used in the prediction rule. Changing the threshold to 0.9 shifts the point where class 1 is predicted but does not change the fact that the boundary itself is defined by a linear function.\\
+
+\item (5 points) In light of your answers to the above two questions, what is the essential property of logistic regression that results in the
+linear decision boundary?\\
+
+    \textbf{Answer:}
+
+The essential property of logistic regression that results in the linear decision boundary is that the classification decision is made based on $w^Tx$, which is a linear function of the input $x$.\\
 
 \end{enumerate}
 
@@ -111,6 +196,21 @@ $$Y=\begin{bmatrix}
 where $y_i\in\mathbb{R}^p$ for all $i$. Show that $$XY=\sum_{i=1}^n
 x_i y_i^T.$$
 
+    \textbf{Answer:}
+
+Given the above $X \in\mathbb{R}^{m\times n}$ and $Y\in\mathbb{R}^{n\times p}$, we can multiply them and have:
+\[XY = [x_1,x_2,\cdots,x_n] \times \begin{bmatrix}
+    y_1^T       \\
+    y_2^T       \\
+    \vdots\\
+    y_n^T
+\end{bmatrix}.\]
+
+This matrix multiplication corresponds to:
+\[XY = (x_1 y_1^T + x_2 y_2^T+\cdots+x_n y_n^T).\]
+
+Thus, we can express $XY$ as the sum of the products:
+\[XY=\sum_{i=1}^n x_i y_i^T\in \mathbb{R}^{m\times p}.\]
 
 \item (10 points) Show that sigmoid function and
 softmax function are the same in the binary case.
@@ -118,6 +218,22 @@ softmax function are the same in the binary case.
     &\mbox{sigmoid}(y) = \frac{1}{1 + e^{-y}}\\
     &\mbox{softmax}(y_j) = \frac{e^{y_j}}{\sum_{i=1}^c e^{y_i}} 
 \end{align*}
+
+    \textbf{Answer:}
+
+In a binary case, we will have 2 classes \{i, j\}. The softmax function for class $j$ is given by:
+
+\[\mbox{softmax}(y_j) = \frac{e^{y_j}}{e^{y_i} + e^{y_j}}.\]
+
+
+If we set $y_i = y$ and $y_j = 0$, then we have:
+
+\[\mbox{softmax}(y_i) = \frac{e^{y}}{e^{y} + e^0} = \frac{e^{y}}{e^{y} + 1}.\]
+
+Now, dividing both numerator and denominator by $e^y$ gives:
+
+\[\mbox{softmax}(y_i) = \frac{1}{1 + e^{-y}}\]
+ which is the exactly the sigmoid function.\\
 
 \item (30 points) \textbf{Perceptron for Handwritten Digits Recognition}:
 The handwritten digits files are in the ``data'' folder: train.txt
@@ -148,8 +264,7 @@ label is 1 and a blue \textcolor{blue}{$+$}  if the label is 5.
 accuracy results using the ``test\_accuracy'' function in
 ``main.py''.
 \item (10 points) Complete the \emph{show\_result} function to plot the
-test data with the separators. Include the images you plotted into
-your report.
+test data with the separators. Include the images you plotted into your report.
 \end{enumerate}
 
 \textbf{Deliverable:} You should submit (1) a report
@@ -162,6 +277,60 @@ you start this assignment. Please do {\color{red} NOT} change anything in the
 
 \end{enumerate}
 
+\[\textbf{Summary}\]
 
+This report presents the development of a Perceptron model for recognizing handwritten digits '1' and '5'. The dataset consists of training and test files, each containing 16x16 pixel images (256 pixels in total) representing the digits. Below are two representative image samples.
+
+\begin{minipage}{0.45\textwidth}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/image_1.png}
+    \caption{Image Sample "5"}
+    \label{fig:enter-label}
+\end{figure}
+\end{minipage}
+\begin{minipage}{0.45\textwidth}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/image_2.png}
+    \caption{Image Sample "1"}
+    \label{fig:enter-label}
+\end{figure}
+\end{minipage}\\
+
+The provided dataset was transformed into two features: symmetry and average intensity. These features were then visualized using a 2D scatter plot, with data points color-coded by label ('1' and '5').
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/dataset_labels.png}
+    \caption{Dataset Labels Distribution}
+    \label{fig:enter-label}
+\end{figure}
+
+The Perceptron model was trained on the transformed data to learn the weight parameters for label prediction. The decision boundaries for the training and test sets are shown in the figures below.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/model_results_train.png}
+    \caption{Train Set with Decision Boundary}
+    \label{fig:enter-label}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/model_results_test.png}
+    \caption{Test Set with Decision Boundary}
+    \label{fig:enter-label}
+\end{figure}
+
+To evaluate model performance, the Perceptron was tested with different maximum iteration limits. The results show accuracy consistency across different iteration counts.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/accuracy_test.png}
+    \caption{Accuracy Test}
+    \label{fig:enter-label}
+\end{figure}
+
+The model achieved a test accuracy of approximately $94.7\%$. The number of iterations had little impact on performance, suggesting that early convergence occurred in the training process.
 
 \end{document}
