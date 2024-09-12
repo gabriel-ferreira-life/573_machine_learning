@@ -16,8 +16,6 @@ We explored the performance of a **Perceptron** model for distinguishing between
 - **Model Training**: The Perceptron learned to separate the two classes based on the feature set.
 - **Evaluation**: Accuracy on the test set remained consistent across varying iteration counts, suggesting the dataset is linearly separable.
 
-For more detailed analysis, visualizations, and the full experiment results, please refer to the [Full Report (PDF)](report/Homework1_Report.pdf).
-
 ---
 
 ## Full Report
