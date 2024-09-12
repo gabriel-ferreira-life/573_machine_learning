@@ -56,10 +56,10 @@ def show_features(X, y, save=True):
     plt.figure(figsize=(8, 5))
 
     for i in range(len(X)):
-        if y[i] == 1:
+        if y[i] == 1.0:
             plt.scatter(X[i, 0], X[i, 1], c='r', marker='*', label='Label 1' if (i==0 or i==1) else "")
 
-        if y[i] == 5:
+        elif y[i] == -1.0:
             plt.scatter(X[i, 0], X[i, 1], c='b', marker='+', label='Label 5' if (i==0 or i==1) else "")
 
     plt.xlabel('Sys')
@@ -106,7 +106,7 @@ class Perceptron(object):
         max_iter = self.max_iter
 
         # Initialize Weights
-        self.W = np.zeros(X.shape[1] + 1)
+        self.W = np.zeros(X.shape[1])
         
         # Loop through the number of iterations
         for _ in range(max_iter):
@@ -115,9 +115,6 @@ class Perceptron(object):
             
             # Loop through the dataset
             for xi, target in zip(X, y):
-
-                # Insert 1 to match with Wo
-                xi = np.insert(xi, 0, 1, axis=0)
 
                 # Compute predictions 
                 prediction = np.dot(xi, self.W)
@@ -158,9 +155,6 @@ class Perceptron(object):
             preds: An array of shape [n_samples,]. Only contains 1 or -1.
         """
         ### YOUR CODE HERE
-
-        # Insert 1 as the first feature to match with Wo
-        X = np.insert(X, 0, 1, axis=1)
         # print(X, " * ", self.W)
 
         # Compute predictions 
