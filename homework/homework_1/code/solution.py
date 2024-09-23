@@ -128,7 +128,9 @@ class Perceptron(object):
                 # print("")
                 
                 # Update weights
-                self.W += (target - prediction_sign) * xi
+                if prediction_sign != target:
+                    self.W += target * xi
+
         
         ### END YOUR CODE
         
