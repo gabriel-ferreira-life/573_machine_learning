@@ -20,4 +20,4 @@ We explored the performance of a **Perceptron** model for distinguishing between
 
 ## Full Report
 
-For a detailed breakdown of the methodology, experimental setup, and full results, please check the [Full Report (PDF)](report/Homework1_Report.pdf).
+For a detailed breakdown of the methodology, experimental setup, and full results, please check the [Full Report (PDF)](report/Homework1_Report.pdf). 
