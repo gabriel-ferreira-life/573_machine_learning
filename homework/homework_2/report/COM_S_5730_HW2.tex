@@ -3,6 +3,7 @@
 \usepackage{amsmath,amsthm,amssymb,multirow,paralist}
 \usepackage[margin=0.8in]{geometry}
 \usepackage{hyperref}
+\usepackage{amsmath}
 
 \begin{document}
 
@@ -42,32 +43,354 @@ good start.
 the toy data set. Then, solve the dual problem and compute
 $\alpha^*$, the optimal Lagrange multipliers. (Note that there will
 be three weights $\boldsymbol w = [w_0, w_1, w_2]$ by considering
-the bias.)
+the bias.)\\
+
+\textbf{Answer}
+
+\textbf{Dual Problem Formulation}
+
+\[\max(\sum^n_{i=1} \alpha_i - \frac{1}{2}\sum^n_{i=1}\sum^n_{j=1}\alpha_i\alpha_j y_i y_j ({x_i \cdot x_j})) \quad s.t. \quad
+    \begin{cases}
+         \sum^n_{j=1} \alpha_i y_i= 0\\
+        0 \leq \alpha_i \leq C
+    \end{cases}\]
+
+\textbf{Calculate the Kernel Matrix}
+
+\textbf{Linear Kernel:} $K(x_i, x_j) = x_i \cdot x_j$
+
+\[K = \begin{bmatrix}
+    x_1 \cdot x_1 & x_1 \cdot x_2 & x_1 \cdot x_3 \\
+    x_2 \cdot x_1 & x_2 \cdot x_2 & x_2 \cdot x_3 \\
+    x_3 \cdot x_1 & x_3 \cdot x_1 & x_3 \cdot x_3 \\
+\end{bmatrix}\]
+
+\textbf{Plug In the Values}
+
+\[\begin{aligned}
+x_1&=(0,0) \quad y_1=-1 \\
+x_2&=(2,2) \quad y_2=-1 \\
+x_3&=(2,0) \quad y_3=1
+\end{aligned}
+\]
+
+\[
+\begin{aligned}
+x_1 \cdot x_1 &= (0 \cdot 0) + (0 \cdot 0) = 0 \\[5pt]
+x_1 \cdot x_2 &= (0 \cdot 2) + (0 \cdot 2) = 0 \\[5pt]
+x_1 \cdot x_3 &= (0 \cdot 2) + (0 \cdot 0) = 0 \\[5pt]
+x_2 \cdot x_2 &= (2 \cdot 2) + (2 \cdot 2) = 8 \\[5pt]
+x_2 \cdot x_3 &= (2 \cdot 2) + (2 \cdot 0) = 4 \\[5pt]
+x_3 \cdot x_3 &= (2 \cdot 2) + (0 \cdot 0) = 4
+\end{aligned}
+\quad -> \quad K = \begin{bmatrix}
+            0 & 0 & 0 \\
+            0 & 8 & 4 \\
+            0 & 4 & 4
+        \end{bmatrix}
+\]
+
+\textbf{So, we have:}
+
+\[
+\begin{aligned}
+\max W(\alpha) &=\sum^3_{i=1} \alpha_i - \frac{1}{2}\sum^3_{i=1}\sum^3_{j=1}\alpha_i\alpha_j y_i y_j ({x_i \cdot x_j}) \\[5pt]
+&=(\alpha_1 + \alpha_2 + \alpha_3) - \frac{1}{2} [0+0+0+0+8\alpha_2^2 - 4\alpha_2\alpha_3 - 4\alpha_2\alpha_3 + 4\alpha_3^2] \\[5pt]
+W(\alpha) &=\alpha_1 + \alpha_2 + \alpha_3 - 4\alpha_2^2 + 4\alpha_2\alpha_3 - 2\alpha_3^2
+\end{aligned}
+\]
+
+\textbf{Constraints}
+
+\begin{enumerate}
+    \item \textbf{Equality Constraint:} $\sum^n_{i=1} \alpha_i y_i = 0$
+    \[-\alpha_1 - \alpha_2 + \alpha_3 = 0\]
+    \item \textbf{Non-Negative and Upper Bound Constraint:} $0 \leq \alpha_i \leq C \quad s.t. \quad C=1$
+\end{enumerate}
+
+Express $\alpha_1$ in terms of $\alpha_2$ and $\alpha_3$: 
+\[\alpha_1 = -\alpha_2 +\alpha_3\]
+
+Substitute $\alpha_1$ in the Dual Function:
+\[
+\begin{aligned}
+    W(\alpha_2, \alpha_3) &=(-\alpha_2+\alpha_3)+\alpha_2+\alpha_3 - 4\alpha_2^2 + 4\alpha_2\alpha_3 - 2\alpha_3^2 \\[5pt]
+    W(\alpha_2, \alpha_3) &=2\alpha_3 - 4\alpha_2^2 + 4\alpha_2\alpha_3 - 2\alpha_3^2 
+\end{aligned}
+\]
+
+To find the optimal values of \( \alpha_1, \alpha_2, \) and \( \alpha_3 \), we compute the partial derivatives with respect to \(\alpha_2 and \alpha_3\) and set them equal to zero. Then use their values to find \(\alpha_1\).
+
+1. Partial derivative with respect to \( \alpha_2 \):
+
+\[
+\frac{\partial W}{\partial \alpha_2} = - 8\alpha_2 + 4\alpha_3 = 0  
+\]
+\[
+\alpha_2 = \frac{\alpha_3}{2}
+\]
+
+2. Partial derivative with respect to \( \alpha_3 \):
+
+\[
+\frac{\partial W}{\partial \alpha_3} = 2 + 4\alpha_2 - 4\alpha_3 = 0
+\]
+\[
+2 + 4(\frac{\alpha_3}{2}) - 4\alpha_3 = 0
+\]
+\[
+\alpha_3 = \frac{-2}{-2}
+\]
+\[
+\alpha_3 = 1
+\]
+
+Solving for \(\alpha_2\):
+
+\[\alpha_2 = \frac{\alpha_3}{2}\]
+\[\alpha_2 = \frac{1}{2}\]
+
+Solving for \(\alpha_1\):
+
+\[-\alpha_1 - \alpha_2 + \alpha_3 = 0\]
+\[\alpha_1 = - \alpha_2 + \alpha_3\]
+\[\alpha_1 = - \frac{1}{2} + 1\]
+\[\alpha_1 = \frac{1}{2}\]
+
+Thus, the optimal values are:
+
+\[
+\alpha_1 = \frac{1}{2}, \quad \alpha_2 = \frac{1}{2}, \quad \alpha_3 = 1
+\]
+
+\textbf{Calculate the Weight Vector W}
+
+\[W = \sum^n_{i=1} \alpha_iy_ix_i\]
+
+\[\begin{aligned}
+    W &= \alpha_1y_1x_1 + \alpha_2y_2x_2 + \alpha_3y_3x_3 \\[5pt]
+    &= \frac{1}{2}(-1)(0,0)+\frac{1}{2}(-1)(2,2)+1(1)(2,0) \\[5pt]
+    &=(0,0)+(-1,-1)+(2,0) \\[5pt]
+    W &= (1,-1)
+\end{aligned}\]
+
+\textbf{Calculate the term b}$(W_0)$
+
+Get any support vector as example:
+
+\[b = y_i - W \cdot x_i\]
+
+\[\begin{aligned}
+    b&=y_3 - W \cdot x_3\\[5pt]
+    &=1-(1,-1)\cdot(2,0) \\[5pt]
+    &=1-2+0 \\[5pt]
+    b&=-1
+\end{aligned}\]
+
+Thus, the optimal values are:
+
+\[
+b=-1 \quad and \quad W = (1, -1)
+\]
 
 \item (20 points) In a separable case, when a multiplier
 $\alpha_i > 0$, its corresponding data point $(\boldsymbol x_i,
 y_i)$ is on the boundary of the optimal separating hyperplane
 with $y_i(\boldsymbol w^T \boldsymbol x_i) = 1$.
 
-Show that the inverse is not True. Namely, it is possible that
-$\alpha_i = 0$ and $(\boldsymbol x_i, y_i)$ is on the boundary
-satisfying $y_i(\boldsymbol w^T \boldsymbol x_i) = 1$.
-
 [Hint: Consider a toy data set with two positive examples at
 ([0,0], +1) and ([1, 0], +1), and one negative example at ([0,
 1], -1).] (Note that there will be three weights $\boldsymbol w =
 [w_0, w_1, w_2]$ by considering the bias.)
+
+\textbf{Answer}
+
+In a separable case, a point \( (x_i, y_i) \) with \( \alpha_i > 0 \) is a support vector and lies on the margin boundary, satisfying \( y_i(w^T x_i + w_0) = 1 \). However, the inverse is not always true: a point can satisfy \( y_i(w^T x_i + w_0) = 1 \) even if \( \alpha_i = 0 \).
+
+\textbf{Example:}
+
+Given the dataset:
+
+\[ (0,0), 1 \]
+\[ (1,0), 1 \]
+\[ (0,1), -1 \]
+
+Let's derive the hyperplane:
+
+1. \textbf{For point} \( (0,0) \):
+\[
+1 \cdot (w_1 \cdot 0 + w_2 \cdot 0 + w_0) = 1 \quad \Rightarrow \quad w_0 = 1
+\]
+
+2. \textbf{For point} \( (1,0) \):
+\[
+1 \cdot (w_1 \cdot 1 + w_2 \cdot 0 + w_0) = 1 \quad \Rightarrow \quad w_1 + 1 = 1 \quad \Rightarrow \quad w_1 = 0
+\]
+
+3. \textbf{For point }\( (0,1) \):
+\[
+-1 \cdot (w_1 \cdot 0 + w_2 \cdot 1 + w_0) = 1 \quad \Rightarrow \quad -1(w_2 + 1) = 1 \quad \Rightarrow \quad w_2 = -2
+\]
+
+Thus, the hyperplane is:
+\[
+w^T x + w_0 = 0 \quad \Rightarrow \quad -2x_2 + 1 = 0 \quad \Rightarrow \quad x_2 = 0.5
+\]
+
+The point \( (0,1) \) satisfies:
+\[
+y_3(w^T x_3 + w_0) = -1(0 \cdot 0 - 2 \cdot 1 + 1) = -1(-1) = 1
+\]
+
+This means \( (0,1) \) is on the boundary \( y_i(w^T x_i + w_0) = 1 \) even though it is correctly classified and has \( \alpha_3 = 0 \).
+
+Ultimately, this demonstrates that a point can be on the boundary \( y_i(w^T x_i + w_0) = 1 \) without having a positive Lagrange multiplier \( \alpha_i \).
 
 \item (20 points) \textbf{Non-separable Case SVM:} In our lecture, we compared the hard-margin SVM and soft-margin SVM.
 Prove that the dual problem of soft-margin SVM is almost
 identical to the hard-margin SVM, except that $\alpha_i$s are
 now bounded by $C$ (tradeoff parameter).
 
+
+\textbf{Proof:}
+
+\textbf{1. Hard-Margin SVM Dual Problem:}
+
+The objective of hard-margin SVM is to maximize the margin while ensuring that all points are correctly classified, without allowing any misclassifications nor margin violations.
+
+The primal problem for hard-margin SVM is:
+\[
+\min_{w, w_0} \quad \frac{1}{2} ||w||^2
+\]
+subject to:
+\[
+y_i(w^T x_i + w_0) \geq 1 \quad \forall i
+\]
+
+The corresponding dual problem is:
+\[
+\max_{\alpha} \sum_{i=1}^N \alpha_i - \frac{1}{2} \sum_{i=1}^N \sum_{j=1}^N \alpha_i \alpha_j y_i y_j \langle x_i, x_j \rangle
+\]
+subject to:
+\[
+\sum_{i=1}^N \alpha_i y_i = 0, \quad \alpha_i \geq 0 \quad \forall i
+\]
+
+\textbf{2. Soft-Margin SVM Dual Problem:}
+
+The objective of soft-margin SVM is to maximize the margin while allowing for some misclassification. This is achieved by introducing slack variables \( \xi_i \), which measure the amount of violation for each point.
+
+The primal problem for soft-margin SVM is:
+\[
+\min_{w, w_0, \xi} \quad \frac{1}{2} ||w||^2 + C \sum_{i=1}^N \xi_i
+\]
+subject to:
+\[
+y_i(w^T x_i + w_0) \geq 1 - \xi_i \quad \forall i, \quad \xi_i \geq 0
+\]
+
+The corresponding dual problem is:
+\[
+\max_{\alpha} \sum_{i=1}^N \alpha_i - \frac{1}{2} \sum_{i=1}^N \sum_{j=1}^N \alpha_i \alpha_j y_i y_j \langle x_i, x_j \rangle
+\]
+subject to:
+\[
+\sum_{i=1}^N \alpha_i y_i = 0, \quad 0 \leq \alpha_i \leq C \quad \forall i
+\]
+
+\textbf{3. Comparison of Dual Problems:}
+
+
+\textbf{- Hard-Margin SVM:} The dual problem is constrained only by \( \alpha_i \geq 0 \).
+
+\textbf{- Soft-Margin SVM:} The dual problem is constrained by \( 0 \leq \alpha_i \leq C\).\\
+
+This additional constraint in the soft-margin SVM accounts for the tolerance to misclassifications. The parameter \( C \) controls the trade-off between maximizing the margin and minimizing classification errors.
+
+This proves that the main difference lies in the upper bound on \( \alpha_i \) introduced by the parameter \( C \).
+
 \item (20 points) \textbf{Kernel Function:} A function $K$
 computes $K(\boldsymbol x_i, \boldsymbol x_j) =
 -\boldsymbol{x_i}^T \boldsymbol x_j $. Is this function a valid
 kernel function for SVM? Prove or disprove it.
 
+\textbf{Answer}
+
+To verify whether \( K(x_i, x_j) = -x_i^T x_j \) is a valid kernel function, we first check if it satisfies the symmetry and positive semi-definiteness conditions.\\
+
+\textbf{Step 1: Check Symmetry}
+
+
+
+\textbf{Definition:} A kernel function \( K(x_i, x_j) \) is symmetric if it satisfies:
+   \[
+   K(x_i, x_j) = K(x_j, x_i) \quad \text{for all } x_i, x_j.
+   \]
+
+\textbf{Symmetry Check:}
+
+   For \( K(x_i, x_j) = -x_i^T x_j \), then
+   \[
+   K(x_i, x_j) = -x_i^T x_j
+   \]
+   and
+   \[
+   K(x_j, x_i) = -x_j^T x_i.
+   \]
+
+\textbf{Result:}
+
+   Since the dot product \( x_i^T x_j \) is symmetric, meaning \( x_i^T x_j = x_j^T x_i \), it follows that:
+   \[
+   K(x_i, x_j) = -x_i^T x_j = -x_j^T x_i = K(x_j, x_i).
+   \]
+
+Thus, the function \( K(x_i, x_j) = -x_i^T x_j \) is symmetric.\\
+
+\textbf{Step 2: Check Positive Semi-Definiteness Using a Counterexample}
+
+To determine if \( K(x_i, x_j) = -x_i^T x_j \) is a valid kernel function, we need to verify if it satisfies the positive semi-definiteness condition. In this case, I will be using a simple counterexample.
+
+\textbf{Definition:} A kernel matrix \( K \) is positive semi-definite if, for any non-zero vector \( \mathbf{z} \), the quadratic form \( \mathbf{z}^T K \mathbf{z} \geq 0 \) holds.
+
+\textbf{Counterexample:} Consider a simple case with two vectors:
+   \[
+   x_1 = [1, 0], \quad x_2 = [0, 1]
+   \]
+
+\textbf{Calculate the Kernel Matrix:}
+
+   Using \( K(x_i, x_j) = -x_i^T x_j \), the kernel matrix \( K \) for \( x_1 \) and \( x_2 \) is:
+   \[
+   K = \begin{bmatrix}
+   K(x_1, x_1) & K(x_1, x_2) \\
+   K(x_2, x_1) & K(x_2, x_2)
+   \end{bmatrix} = \begin{bmatrix}
+   -x_1^T x_1 & -x_1^T x_2 \\
+   -x_2^T x_1 & -x_2^T x_2
+   \end{bmatrix}
+   \]
+
+   Substituting the values:
+   \[
+   K = \begin{bmatrix}
+   -1 & 0 \\
+   0 & -1
+   \end{bmatrix}
+   \]
+
+\textbf{Test Positive Semi-Definiteness}
+
+   For \( K \) to be positive semi-definite, the quadratic form \( \mathbf{z}^T K \mathbf{z} \geq 0 \) must hold for any non-zero vector \( \mathbf{z} \). Choose \( \mathbf{z} = [1, 1]^T \):
+   \[
+   \mathbf{z}^T K \mathbf{z} = [1, 1] \begin{bmatrix} -1 & 0 \\ 0 & -1 \end{bmatrix} \begin{bmatrix} 1 \\ 1 \end{bmatrix} = [1, 1] \begin{bmatrix} -1 \\ -1 \end{bmatrix} = -2
+   \]
+
+   Since \( \mathbf{z}^T K \mathbf{z} = -2 \), which is negative, \( K \) is not positive semi-definite.\\
+
+\textbf{Final Conclusion}
+
+The function \( K(x_i, x_j) = -x_i^T x_j \) is \textbf{not} a valid kernel for SVM because its kernel matrix can violate the positive semi-definiteness condition.
 
 
 \item (20 points) \textbf{Support Vector Machine for Handwritten
@@ -102,7 +425,72 @@ into a short report. In your report, please report the accuracy
 result and total support vector number of each model. A briefly
 analysis based on the results is also needed. For example, how
 the number of support vectors changes as parameter value changes
-and why.
+and why.\\
+
+\textbf{Report}
+
+\section*{Effect of Cost Parameter \( C \)}
+Different values of \( C \) were used to train SVM models. The trained models were then applied to the testing dataset to evaluate their performance.
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Cost \( C \)} & \textbf{Accuracy} & \textbf{Support Vectors} \\
+        \hline
+        0.01 & 0.8939 & 1080 \\
+        \hline
+        0.1 & 0.9623 & 414 \\
+        \hline
+        1 & 0.9599 & 162 \\
+        \hline
+        5 & 0.9623 & 104 \\
+        \hline
+        10 & 0.9623 & 92 \\
+        \hline
+    \end{tabular}
+    \caption{Model Performance with Different Values of \( C \)}
+\end{table}
+
+\textbf{Analysis:}
+
+\begin{itemize}
+    \item \textbf{C = 0.01:} Achieved an accuracy of 89.39\% using 1080 support vectors, indicating underfitting due to the large margin.
+    \item \textbf{C = 0.1:} Accuracy significantly improved to 96.23\% with 414 support vectors, showing that increasing \( C \) reduces the margin width, resulting in better performance.
+    \item \textbf{C = 1:} Accuracy slightly decreased to 95.99\%, with the number of support vectors dropping to 162, indicating a more precise decision boundary.
+    \item \textbf{C = 5:} Accuracy returned to 96.23\% using only 104 support vectors, demonstrating optimal performance with fewer support vectors.
+    \item \textbf{C = 10:} Accuracy remained stable at 96.23\% with only 92 support vectors, suggesting that further increases in \( C \) have minimal impact on performance but lead to a tighter margin.
+\end{itemize}
+
+\section*{Effect of Kernel Functions}
+The models were also trained using different kernel functions and evaluated on the testing dataset.
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Kernel} & \textbf{Accuracy} & \textbf{Support Vectors} \\
+        \hline
+        Linear & 0.9599 & 162 \\
+        \hline
+        Polynomial & 0.9575 & 75 \\
+        \hline
+        RBF & 0.9623 & 90 \\
+        \hline
+    \end{tabular}
+    \caption{Model Performance with Different Kernel Functions}
+\end{table}
+
+\textbf{Analysis:}
+
+\begin{itemize}
+    \item \textbf{Linear Kernel:} Achieved an accuracy of 95.99\% using 162 support vectors. The model performed well for linearly separable data but required a relatively high number of support vectors.
+    \item \textbf{Polynomial Kernel:} Accuracy slightly decreased to 95.75\%, while the number of support vectors dropped significantly to 75, suggesting that the polynomial kernel may have overfit the data.
+    \item \textbf{RBF Kernel:} Achieved the highest accuracy of 96.23\% with only 90 support vectors, indicating that the RBF kernel effectively handles non-linear boundaries with a good balance between accuracy and support vector count.
+\end{itemize}
+
+
+
 \end{enumerate}
 
 
