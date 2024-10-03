@@ -1,5 +1,5 @@
 
-# Homework 1 - Linear Regression, Logistic Regression, Perceptron
+# Homework 2 - Support Vector Machine
 
 This repository contains implementations and experiments involving three core machine learning concepts: **Linear Regression**, **Linear Perceptron**, and **Logistic Regression**. The task focused on using these models to classify handwritten digits '1' and '5'.
 
