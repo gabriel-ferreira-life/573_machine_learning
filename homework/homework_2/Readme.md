@@ -1,4 +1,4 @@
-# Homework 2 - Support Vector Machine
+# Homework 2 - Support Vector Machine 
 
 This repository contains implementations and theoretical derivations involving Support Vector Machine (SVM) models. The focus is on understanding the dual formulation of SVMs and comparing different kernel functions. We thoroughly explored **hard-margin SVM**, **soft-margin SVM**, and validated kernel functions using hand calculations to gain deeper insights into their properties.
 
