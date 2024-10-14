@@ -1,5 +1,5 @@
 import math
-
+import numpy as np
 
 class Tree(object):
 
@@ -28,8 +28,7 @@ class Tree(object):
                 cur_depth = subtree.depth
             max_depth = max(cur_depth, max_depth)
         return max_depth + 1
-
-
+    
 def entropy(data):
     """Compute entropy of data.
 
@@ -39,12 +38,24 @@ def entropy(data):
     Returns:
         entropy of data (float)
     """
-    ### YOUR CODE HERE
 
+    # Parse data
+    y = np.array([item[1] for item in data])
 
+    # Lenth of the target
+    len_y = len(y)
 
-    ### END YOUR CODE
+    # Frequency of each label
+    labels, counts = np.unique(y, return_counts=True)
 
+    # Compute entropy using label probabilities
+    entropy = 0
+    for count in counts:
+        probability = count / len_y
+        if probability > 0:
+            entropy -= probability * np.log2(probability)
+
+    return entropy
 
 def gain(data, feature):
     """Compute the gain of data of splitting by feature.
@@ -56,13 +67,23 @@ def gain(data, feature):
     Returns:
         gain of splitting data by feature
     """
-    ### YOUR CODE HERE
 
-    # please call entropy to compute entropy
+    # Base Entropy
+    base_entropy = entropy(data)
 
+    # Unique values of the given feature
+    values = set([x[feature] for x, y in data])
 
-    ### END YOUR CODE
-
+    # Calculate feature weighted entropy
+    weighted_entropy = 0
+    for value in values:
+        subset = [(x, y) for x, y in data if x[feature] == value]
+        subset_entropy = entropy(subset)
+        subset_probability = len(subset)/ len(data)
+        weighted_entropy += subset_probability*subset_entropy
+    
+    # Return Information Gain of the feature
+    return base_entropy - weighted_entropy
 
 def get_best_feature(data):
     """Find the best feature to split data.
@@ -73,11 +94,23 @@ def get_best_feature(data):
     Returns:
         index of feature to split data
     """
-    ### YOUR CODE HERE
+    # Initialize features
+    best_feature = -1
+    max_gain = np.float64('-inf')
 
-    # please call gain to compute gain
+    # Loop through the range of columns in the dataset
+    for col in range(len(data[0][0])):
 
-    ### END YOUR CODE
+        # Compute the feature gain
+        feature_ig = gain(data,col)
+
+        # Compare current feature_ig with the max_gain
+        if feature_ig > max_gain:
+            max_gain = feature_ig
+            best_feature = col
+
+    # Return the feature with the highest IG
+    return best_feature
 
 
 def build_tree(data):
@@ -88,14 +121,15 @@ def build_tree(data):
         return list(ys)[0]
     feature = get_best_feature(data)
     subtrees = {}
-    ### YOUR CODE HERE
 
-    # please split your data with feature and build sub-trees
-    # by calling build_tree recursively
+    # Unique values of the selected feature
+    values = set([x[feature] for x, y in data])
 
-    # sub_tree = build_tree(...)
+    # Split data and build subtrees recursively for each value of the feature
+    for value in values:
+        subset = [(x, y) for x, y in data if x[feature] == value]
+        subtrees[value] = build_tree(subset)
 
-    ### END YOUR CODE
     return Tree(feature, ys, subtrees)
 
 
@@ -126,9 +160,34 @@ def prune_tree(tree, data):
     Returns:
         a pruned tree
     """
-    ### YOUR CODE HERE
+    # If the tree is a leaf, return it directly
+    if type(tree) == int:
+        return tree
 
-    # please call test_data to obtain validation error
-    # please call prune_tree recursively for pruning tree
+    # Test current accuracy before pruning
+    original_accuracy = test_data(tree, data)
 
-    ### END YOUR CODE
+    # Prune each subtree recursively
+    for value, subtree in tree.subtrees.items():
+        if type(subtree) != int:
+            # Recursively prune the subtree
+            tree.subtrees[value] = prune_tree(subtree, data)
+
+    # Test accuracy after pruning subtrees
+    pruned_accuracy = test_data(tree, data)
+
+    # If pruning does not decrease the error, try replacing the subtree with a leaf node
+    if pruned_accuracy >= original_accuracy:
+        # Create a leaf node based on the majority class in the current node
+        leaf_label = max(tree.ys, key=tree.ys.get)
+        pruned_tree = leaf_label
+
+        # Test the accuracy if we prune the entire current subtree
+        temp_accuracy = test_data(pruned_tree, data)
+
+        # If accuracy does not decrease, replace the subtree with the leaf
+        if temp_accuracy >= pruned_accuracy:
+            return pruned_tree
+
+    # If pruning was not beneficial, return the original tree
+    return tree
