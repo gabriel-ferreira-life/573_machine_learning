@@ -12,5 +12,8 @@ The repository is organized into separate folders for each homework assignment a
 - **Homework 2 - Support Vector Machine**:
   Focuses on the theoretical derivation and implementation of Support Vector Machines (SVM). The assignment includes hand calculations for the dual problem formulation and evaluation of SVM performance with different values of the cost parameter $' C '$ and various kernel functions.
 
-- **Homework 3** (Placeholder):
+- **Homework 3 - Decision Tree Learning**:
+Explores decision tree construction and pruning techniques. Includes theoretical conversion of decision rules to decision tree representations and practical implementation of decision trees with and without pruning. The impact of pruning on model accuracy, complexity, and generalization is analyzed.
+
+- **Homework 4** (Placeholder):
   Future homework assignments will be added here, covering additional machine learning topics and applications.
