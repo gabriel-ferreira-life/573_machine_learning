@@ -1,6 +1,6 @@
 # Homework 3 - Decision Tree Learning
 
-This repository contains implementations and theoretical explorations involving Decision Tree Learning. The focus is on constructing decision trees, applying pruning techniques, and analyzing their impact on model performance. Both theoretical derivations and practical experiments are included to gain insights into decision tree behavior, especially with and without pruning.
+This repository contains implementations and theoretical explorations involving Decision Tree Learning. The focus is on constructing decision trees, applying pruning techniques, and analyzing their impact on model performance. Both theoretical derivations and practical experiments are included to gain insights into decision tree behavior, especially with and without pruning. 
 
 ## Summary
 
