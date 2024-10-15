@@ -149,7 +149,6 @@ def test_data(tree, data):
         count += (y_hat == y)
     return round(count / float(len(data)), 4)
 
-
 def prune_tree(tree, data):
     """Find the best feature to split data.
 
@@ -160,34 +159,27 @@ def prune_tree(tree, data):
     Returns:
         a pruned tree
     """
-    # If the tree is a leaf, return it directly
-    if type(tree) == int:
+    # Check if the current tree node is a leaf node
+    if isinstance(tree, int):
         return tree
-
-    # Test current accuracy before pruning
-    original_accuracy = test_data(tree, data)
+    
+    # Determine what to do if there's no data reaching the current node
+    if not data:
+        leaf_label = max(tree.ys, key=tree.ys.get) # Majority classs
+        return leaf_label
 
     # Prune each subtree recursively
     for value, subtree in tree.subtrees.items():
-        if type(subtree) != int:
-            # Recursively prune the subtree
-            tree.subtrees[value] = prune_tree(subtree, data)
+        data_subtree = [(x, y) for x, y in data if x[tree.feature] == value]
+        tree.subtrees[value] = prune_tree(subtree, data_subtree)
 
-    # Test accuracy after pruning subtrees
-    pruned_accuracy = test_data(tree, data)
+    # Attempt to collapse this node
+    leaf_label = max(tree.ys, key=tree.ys.get)
+    collapsed_accuracy = sum(1 for x, y in data if y == leaf_label) / len(data)
+    current_accuracy = test_data(tree, data)
 
-    # If pruning does not decrease the error, try replacing the subtree with a leaf node
-    if pruned_accuracy >= original_accuracy:
-        # Create a leaf node based on the majority class in the current node
-        leaf_label = max(tree.ys, key=tree.ys.get)
-        pruned_tree = leaf_label
-
-        # Test the accuracy if we prune the entire current subtree
-        temp_accuracy = test_data(pruned_tree, data)
-
-        # If accuracy does not decrease, replace the subtree with the leaf
-        if temp_accuracy >= pruned_accuracy:
-            return pruned_tree
-
-    # If pruning was not beneficial, return the original tree
-    return tree
+    # Only prune if collapsed accuracy improves by at least delta
+    if collapsed_accuracy > current_accuracy:
+        return leaf_label
+    else:
+        return tree

@@ -479,13 +479,13 @@ tree with and without pruning.
 \begin{verbatim}
 ==========================================================
 Validate accuracy on tree without pruning ========> 0.8881
-Validate accuracy on tree with pruning ===========> 0.6895
+Validate accuracy on tree with pruning ===========> 0.917
 Test accuracy on tree without pruning ============> 0.8757
-Test accuracy on tree with pruning ===============> 0.6908
+Test accuracy on tree with pruning ===============> 0.8757
 Tree size without pruning ========================>    288
-Tree size with pruning ===========================>      4
+Tree size with pruning ===========================>    198
 Tree depth without pruning =======================>      7
-Tree depth with pruning ==========================>      2
+Tree depth with pruning ==========================>      7
 ==========================================================
 \end{verbatim}
 \end{adjustwidth}
@@ -493,15 +493,15 @@ Tree depth with pruning ==========================>      2
 
 \textbf{Accuracy Comparison}
     
-    Both validation and test accuracy decreased after pruning (validation: 0.8881 to 0.6895, test: 0.8757 to 0.6908). This suggests that the pruned tree may be under-fitting compared to the non-pruned version, as it has lost predictive power on both datasets.
+    The validation accuracy increased after pruning from 0.8881 to 0.917 while the test accuracy remained the same at 0.8757. This suggests that the pruned tree generalizes better to the validation data and maintains its predictive performance on the test set compared to the tree without pruning.
 
 \textbf{Tree Complexity}
 
-    The pruned tree has significantly reduced size (from 288 nodes to 4 nodes) and depth (from 7 to 2). This reduction in complexity makes the model simpler, which resulted in the under-fitting observed in this experiment.
+    The pruned tree has a reduced size, decreasing from 288 nodes to 198 nodes, while the depth remains unchanged at 7. This reduction in the number of nodes simplifies the model, making it more interpretable and efficient without sacrificing accuracy.
 
 \textbf{Generalization vs. Fit}
 
-    Although pruning generally aims to reduce over-fitting and improve generalization, in this case, it appears that pruning caused under-fitting, resulting in lower performance on both the validation and test datasets.
+    In this experiment, pruning successfully reduced overfitting by simplifying the tree, which led to improved generalization on the validation set and maintained performance on the test set. The pruned tree does a better balance between complexity and fit, retaining its predictive power while being less complex.
     
 
 \end{enumerate}
