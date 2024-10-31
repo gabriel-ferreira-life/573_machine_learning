@@ -15,5 +15,9 @@ The repository is organized into separate folders for each homework assignment a
 - **Homework 3 - Decision Tree Learning**:
 Explores decision tree construction and pruning techniques. Includes theoretical conversion of decision rules to decision tree representations and practical implementation of decision trees with and without pruning. The impact of pruning on model accuracy, complexity, and generalization is analyzed.
 
-- **Homework 4** (Placeholder):
+- **Homework 4 - Clustering and Dimensionality Reduction**:
+  Covers **Hierarchical Clustering**, **K-medians Clustering**, and **Principal Components Analysis (PCA)**. This assignment includes implementations and analysis of Single-Link and Complete-Link hierarchical clustering, clustering using K-medians with Manhattan distance, and dimensionality reduction through PCA.
+
+
+- **Homework 5** (Placeholder):
   Future homework assignments will be added here, covering additional machine learning topics and applications.

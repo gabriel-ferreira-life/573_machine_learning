@@ -1,0 +1,486 @@
+\documentclass[11pt]{article}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{amsmath,amsthm,amssymb,multirow,paralist}
+\usepackage[margin=0.8in]{geometry}
+\usepackage[]{algorithm2e}
+\usepackage{hyperref}
+\usepackage{tikz,forest}
+\usetikzlibrary{arrows.meta}
+\usepackage{xcolor}
+\usepackage{float}
+
+
+\providecommand{\abs}[1]{\left\vert#1\right\vert}
+\providecommand{\norm}[1]{\left\Vert#1\right\Vert}
+
+\begin{document}
+
+\begin{center}
+    {\Large \textbf{COM S 5730 Homework 4}}\\
+
+    \linethickness{1mm}\line(1,0){498}
+
+    \begin{enumerate}
+\item Please put required code files and report into a
+compressed file ``HW4\_FirstName\_LastName.zip''
+\item Unlimited number of submissions are
+allowed on Canvas and the latest one will be graded.
+\item Due: \textbf{Tuesday Nov. 05, 2024 at 11:59pm.}
+        \item {\color{red} No later submission is accepted.}
+        \item Please read and follow submission instructions. No exception
+              will be made to accommodate incorrectly submitted files/reports.
+        \item All students are required to typeset their reports using
+              latex. Overleaf
+              (\url{https://www.overleaf.com/learn/latex/Tutorials}) can be a
+              good start.
+    \end{enumerate}
+
+    \linethickness{1mm}\line(1,0){498}
+
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{enumerate}
+
+    \item (40 points) \textbf{Hierarchical clustering}
+
+    Use the similarity matrix in Table~\ref{tb:exp1} to perform
+    (1) single (MIN) and (2) complete (MAX) link hierarchical
+    clustering. Show each step with dendrogram and the
+    corresponding similarity matrix update. The dendrogram should
+    clearly show the order in which the points are merged.
+    Suppose we choose to use 3 clusters, Show the cut in each
+    final dendrogram.
+
+    \begin{table}[ht]\label{tb:exp1}
+        \centering
+        \caption{Similarity matrix.}
+
+        \begin{tabular}{ l| c | c | c | c | c}\hline
+                   & \textbf{p1} & \textbf{p2} & \textbf{p3} & \textbf{p4} & \textbf{p5} \\ \hline
+            \bf p1 & 1.00        & 0.10        & 0.41        & 0.55        & 0.35        \\
+            \bf p2 & 0.10        & 1.00        & 0.64        & 0.47        & 0.98        \\
+            \bf p3 & 0.41        & 0.64        & 1.00        & 0.44        & 0.85        \\
+            \bf p4 & 0.55        & 0.47        & 0.44        & 1.00        & 0.76        \\
+            \bf p5 & 0.35        & 0.98        & 0.85        & 0.76        & 1.00        \\
+            \hline
+        \end{tabular}
+        % \vspace{-5pt}
+    \end{table}
+
+    \begin{enumerate}
+        \item \textbf{Single (Min)}
+        \begin{itemize}
+            \item \textbf{State 1:} Merge p2 and p5 (Highest similarity: 0.98).
+\begin{table}[H]
+        \centering
+        \begin{minipage}{0.7\textwidth}  % Adjust width to control centering
+            \centering
+            \begin{minipage}{0.4\textwidth}
+                \centering
+                \label{tb:exp1}
+                \begin{tabular}{ l| c | c | c | c | c}\hline
+                           & \textbf{p1} & \textbf{p2} & \textbf{p3} & \textbf{p4} & \textbf{p5} \\ \hline
+                    \bf p1 & 1.00        & 0.10        & 0.41        & 0.55        & 0.35        \\
+                    \bf p2 & 0.10        & 1.00        & 0.64        & 0.47        &  \textcolor{red}{0.98}        \\
+                    \bf p3 & 0.41        & 0.64        & 1.00        & 0.44        & 0.85        \\
+                    \bf p4 & 0.55        & 0.47        & 0.44        & 1.00        & 0.76        \\
+                    \bf p5 & 0.35        &  \textcolor{red}{0.98}        & 0.85        & 0.76        & 1.00        \\
+                    \hline
+                \end{tabular}
+                \captionof{Similarity matrix: }{Before merging p2 and p5}
+            \end{minipage}%
+            \hfill
+            \begin{minipage}{0.3\textwidth}
+                \centering
+                \includegraphics[width=\linewidth]{homework4/images/min_s1.png}
+                \captionof{figure}{ $S_1$: Dendrogram after merging p2 and p5}
+                \label{fig:your-image}
+            \end{minipage}
+        \end{minipage}
+    \end{table}
+    
+    \item \textbf{State 2:} Merge \{p2, p5\} and p3 (Current highest similarity: 0.85)
+
+        \begin{itemize}
+        \item Updated Similarities:
+        \begin{itemize}
+            \item s(\{p2, p5\}, p1) = max(0.10, 0.35) = 0.35
+            \item s(\{p2, p5\}, p3) = max(0.64, 0.85) = \textbf{0.85}
+            \item s(\{p2, p5\}, p4) = max(0.47, 0.76) = 0.76 \\
+        \end{itemize}
+    \end{itemize}
+    
+\begin{table}[H]
+        \centering
+        \begin{minipage}{0.7\textwidth}  % Adjust width to control centering
+            \centering
+            \begin{minipage}{0.4\textwidth}
+                \centering
+                \label{tb:exp1}
+                \begin{tabular}{ l| c | c | c | c}\hline
+                           & \textbf{p1} & \textbf{\{p2\}}\textbf{\{p5\}}  & \textbf{p3} & \textbf{p4} \\ \hline
+                    \bf p1 & 1.00        & 0.35         & 0.41        & 0.55               \\
+                    \bf \{p2\}\{p5\} & 0.35        & 1.00         & \textcolor{red}{0.85}        & 0.76               \\
+                    \bf p3 & 0.41        & \textcolor{red}{0.85}         & 1.00        & 0.44               \\
+                    \bf p4 & 0.55        & 0.76         & 0.44        & 1.00               \\
+                    \hline
+                \end{tabular}
+                \captionof{Similarity matrix: }{Before merging \{p2, p5\} and p3}
+            \end{minipage}%
+            \hfill
+            \begin{minipage}{0.3\textwidth}
+                \centering
+                \includegraphics[width=\linewidth]{homework4/images/min_s2.png}
+                \captionof{figure}{ $S_2$: Dendrogram after merging \{p2, p5\} and p3}
+                \label{fig:your-image}
+            \end{minipage}
+        \end{minipage}
+    \end{table}
+
+        \item \textbf{State 3:} Merge \{p2, p3, p5\} and p4 (Next highest similarity: 0.76)
+
+        \begin{itemize}
+        \item Updated Similarities:
+        \begin{itemize}
+            \item s(\{p2, p3, p5\}, p1) = max(0.10, 0.41, 0.35) = 0.41
+            \item s(\{p2, p3, p5\}, p4) = max(0.47, 0.44, 0.76) = \textbf{0.76} \\
+        \end{itemize}
+    \end{itemize}
+    
+\begin{table}[H]
+        \centering
+        \begin{minipage}{0.75\textwidth}  % Adjust width to control centering
+            \centering
+            \begin{minipage}{0.4\textwidth}
+                \centering
+                \label{tb:exp1}
+                \begin{tabular}{ l| c | c | c}\hline
+                           & \textbf{p1} & \textbf{\{p2\}}\textbf{\{p5\}}\textbf{\{p3\}} & \textbf{p4} \\ \hline
+                    \bf p1                 & 1.00        & 0.41        & 0.55               \\
+                    \bf \{p2\}\{p5\}\{p3\} & 0.41        & 1.00        & \textcolor{red}{0.76}                           \\
+                    \bf p4                 & 0.55        & \textcolor{red}{0.76}        & 1.00               \\
+                    \hline
+                \end{tabular}
+                \captionof{Similarity matrix: }{Before merging \{p2, p3, p5\} and p4}
+            \end{minipage}%
+            \hfill
+            \begin{minipage}{0.28\textwidth}
+                \centering
+                \includegraphics[width=\linewidth]{homework4/images/min_s3.png}
+                \captionof{figure}{ $S_3$: Dendrogram after merging \{p2, p3, p5\} and p4}
+                \label{fig:your-image}
+            \end{minipage}
+        \end{minipage}
+    \end{table}
+
+            \item \textbf{State 4:} Merge {p2, p3, p4, p5} and p1 (Similarity: 0.55)
+
+        \begin{itemize}
+        \item Updated Similarities:
+        \begin{itemize}
+            \item s(\{p2, p3, p4, p5\}, p1) = max(0.10, 0.41, 0.55, 0.35) = \textbf{0.55}\\
+        \end{itemize}
+    \end{itemize}
+    
+\begin{table}[H]
+        \centering
+        \begin{minipage}{0.85\textwidth}  % Adjust width to control centering
+            \centering
+            \begin{minipage}{0.5\textwidth}
+                \centering
+                \label{tb:exp1}
+                \begin{tabular}{ l| c | c}\hline
+                           & \textbf{p1} & \textbf{\{p2\}}\textbf{\{p5\}}\textbf{\{p3\}}\textbf{\{p4\}} \\ \hline
+                    \bf \hspace{1.5cm} p1                 & 1.00        & \textcolor{red}{0.55} \\
+                    \bf \{p2\}\{p5\}\{p3\}\{p4\} & \textcolor{red}{0.55}        & 1.00 \\
+                    \hline
+                \end{tabular}
+                \captionof{Similarity matrix: }{Before merging \{p2, p3, p4, p5\} and p1}
+            \end{minipage}%
+            \hfill
+            \begin{minipage}{0.28\textwidth}
+                \centering
+                \includegraphics[width=\linewidth]{homework4/images/min_s4.png}
+                \captionof{figure}{ $S_4$: Dendrogram after merging \{p2, p3, p4, p5\} and p1}
+                \label{fig:your-image}
+            \end{minipage}
+        \end{minipage}
+    \end{table}
+    
+    \end{itemize}
+
+    \textbf{Final Clusters:}
+    \begin{itemize}
+        \item \textbf{Cluster 1:} {p1}
+        \item \textbf{Cluster 2:} {p4}
+        \item \textbf{Cluster 3:} {p2, p3, p5}\\
+    \end{itemize}
+
+    \item \textbf{Complete (Max)}
+        \begin{itemize}
+            \item \textbf{State 1:} Merge p2 and p5 (Highest similarity: 0.98).
+\begin{table}[H]
+        \centering
+        \begin{minipage}{0.7\textwidth}  % Adjust width to control centering
+            \centering
+            \begin{minipage}{0.4\textwidth}
+                \centering
+                \label{tb:exp1}
+                \begin{tabular}{ l| c | c | c | c | c}\hline
+                           & \textbf{p1} & \textbf{p2} & \textbf{p3} & \textbf{p4} & \textbf{p5} \\ \hline
+                    \bf p1 & 1.00        & 0.10        & 0.41        & 0.55        & 0.35        \\
+                    \bf p2 & 0.10        & 1.00        & 0.64        & 0.47        &  \textcolor{red}{0.98}        \\
+                    \bf p3 & 0.41        & 0.64        & 1.00        & 0.44        & 0.85        \\
+                    \bf p4 & 0.55        & 0.47        & 0.44        & 1.00        & 0.76        \\
+                    \bf p5 & 0.35        &  \textcolor{red}{0.98}        & 0.85        & 0.76        & 1.00        \\
+                    \hline
+                \end{tabular}
+                \captionof{Similarity matrix: }{Before merging \{p2\} and \{p5\}}
+            \end{minipage}%
+            \hfill
+            \begin{minipage}{0.3\textwidth}
+                \centering
+                \includegraphics[width=\linewidth]{homework4/images/max_s1.png}
+                \captionof{figure}{ $S_1$: Dendrogram after merging \{p2\} and \{p5\}}
+                \label{fig:your-image}
+            \end{minipage}
+        \end{minipage}
+    \end{table}
+    
+    \item \textbf{State 2:} Merge \{p2, p5\} and p3 (Current highest similarity: 0.64)
+
+        \begin{itemize}
+        \item Updated Similarities:
+        \begin{itemize}
+            \item s(\{p2, p5\}, p1) = min(0.10, 0.35) = 0.10
+            \item s(\{p2, p5\}, p3) = min(0.64, 0.85) = \textbf{0.64}
+            \item s(\{p2, p5\}, p4) = min(0.47, 0.76) = 0.47 \\
+        \end{itemize}
+    \end{itemize}
+    
+\begin{table}[H]
+        \centering
+        \begin{minipage}{0.7\textwidth}  % Adjust width to control centering
+            \centering
+            \begin{minipage}{0.4\textwidth}
+                \centering
+                \label{tb:exp1}
+                \begin{tabular}{ l| c | c | c | c}\hline
+                           & \textbf{p1} & \textbf{\{p2\}}\textbf{\{p5\}}  & \textbf{p3} & \textbf{p4} \\ \hline
+                    \bf p1 & 1.00        & 0.10         & 0.41        & 0.55               \\
+                    \bf \{p2\}\{p5\} & 0.10        & 1.00         & \textcolor{red}{0.64}        & 0.47               \\
+                    \bf p3 & 0.41        & \textcolor{red}{0.64}         & 1.00        & 0.44               \\
+                    \bf p4 & 0.55        & 0.47         & 0.44        & 1.00               \\
+                    \hline
+                \end{tabular}
+                \captionof{Similarity matrix: }{Before merging \{p2, p5\} and \{p3\}}
+            \end{minipage}%
+            \hfill
+            \begin{minipage}{0.3\textwidth}
+                \centering
+                \includegraphics[width=\linewidth]{homework4/images/max_s2.png}
+                \captionof{figure}{ $S_2$: Dendrogram after merging \{p2, p5\} and \{p3\}}
+                \label{fig:your-image}
+            \end{minipage}
+        \end{minipage}
+    \end{table}
+
+        \item \textbf{State 3:} Merge p1 and p4 (Next highest similarity: 0.55)
+
+        \begin{itemize}
+        \item Updated Similarities:
+        \begin{itemize}
+            \item s(\{p2, p3, p5\}, p1) = min(0.10, 0.41, 0.35) = 0.10
+            \item s(\{p2, p3, p5\}, p4) = min(0.47, 0.44, 0.76) = 0.44
+        \end{itemize}
+    \end{itemize}
+    
+\begin{table}[H]
+        \centering
+        \begin{minipage}{0.75\textwidth}  % Adjust width to control centering
+            \centering
+            \begin{minipage}{0.4\textwidth}
+                \centering
+                \label{tb:exp1}
+                \begin{tabular}{ l| c | c | c}\hline
+                           & \textbf{p1} & \textbf{\{p2\}}\textbf{\{p5\}}\textbf{\{p3\}} & \textbf{p4} \\ \hline
+                    \bf p1                 & 1.00       & 0.10        & \textcolor{red}{0.55}  \\
+                    \bf \{p2\}\{p5\}\{p3\} & 0.10        & 1.00        & 0.44                           \\
+                    \bf p4                 & \textcolor{red}{0.55}        & 0.44        & 1.00               \\
+                    \hline
+                \end{tabular}
+                \captionof{Similarity matrix: }{Before merging \{p1\} and \{p4\}}
+            \end{minipage}%
+            \hfill
+            \begin{minipage}{0.28\textwidth}
+                \centering
+                \includegraphics[width=\linewidth]{homework4/images/max_s3.png}
+                \captionof{figure}{ $S_1$: Dendrogram after merging \{p1\} and \{p4\}}
+                \label{fig:your-image}
+            \end{minipage}
+        \end{minipage}
+    \end{table}
+
+            \item \textbf{State 4:} Merge {p1, p4} and {p2, p3, p5} (Similarity: 0.10)
+
+        \begin{itemize}
+        \item Updated Similarities:
+        \begin{itemize}
+            \item s(\{p1, p4\}, \{p2, p3, p5\}) = min(0.10, 0.41, 0.35, 0.47, 0.44, 0.76) = 0.10
+        \end{itemize}
+    \end{itemize}
+    
+\begin{table}[H]
+        \centering
+        \begin{minipage}{0.85\textwidth}  % Adjust width to control centering
+            \centering
+            \begin{minipage}{0.5\textwidth}
+                \centering
+                \label{tb:exp1}
+                \begin{tabular}{ l| c | c}\hline
+                           & \textbf{\{p1\}}\textbf{\{p4\}} & \textbf{\{p2\}}\textbf{\{p5\}}\textbf{\{p3\}} \\ \hline
+                    \bf \{p1\}\{p4\}                & 1.00        & \textcolor{red}{0.10} \\
+                    \bf \{p2\}\{p5\}\{p3\} & \textcolor{red}{0.10}        & 1.00 \\
+                    \hline
+                \end{tabular}
+                \captionof{Similarity matrix: }{Before merging \{p1, p4\}, \{p2, p3, p5\}}
+            \end{minipage}%
+            \hfill
+            \begin{minipage}{0.28\textwidth}
+                \centering
+                \includegraphics[width=\linewidth]{homework4/images/max_s4.png}
+                \captionof{figure}{ $S_1$: Dendrogram after merging \{p1, p4\}, \{p2, p3, p5\}}
+                \label{fig:your-image}
+            \end{minipage}
+        \end{minipage}
+    \end{table}
+    
+    \end{itemize}
+
+    \textbf{Final Clusters:}
+    \begin{itemize}
+        \item \textbf{Cluster 1:} {p2, p5}
+        \item \textbf{Cluster 2:} {p3}
+        \item \textbf{Cluster 3:} {p1, p4}\\
+    \end{itemize}
+    \end{enumerate}
+
+    \item (30 points) \textbf{K-Medians Clustering}
+    
+    The K-means algorithm can be summarized as below:
+    \begin{enumerate}
+        \item Select K points as the initial centroids.
+        \item \textbf{repeat}
+        \item \;\;\;\; Form K clusters by assigning all points to the closest centroid.
+        \item \;\;\;\; Recompute the centroid of each cluster.
+        \item \textbf{until} The centroids don't change.
+    \end{enumerate}
+
+    K-medians clustering is a variation of k-means clustering
+    where it calculates the median for each cluster to determine
+    its center instead of using the mean. Also, K-medians makes
+    use of the Manhattan distance for points assignment.
+    
+    \begin{enumerate}
+        \item (8 points) Please show the algorithm of K-medians
+        in the above format.\\
+
+            The K-medians algorithm can be summarized as below:
+            \begin{enumerate}
+                \item Select K points as the initial centroids.
+                \item \textbf{repeat}
+                \item \;\;\;\; Form K clusters by assigning all points to the closest centroid using Manhattan distance as the distance metric.
+                \item \;\;\;\; Recompute the centroid of each cluster by calculating the median of the data points in that cluster.
+                \item \textbf{until} The centroids don't change.\\
+            \end{enumerate}
+
+        
+
+        \item (6 points) Please explain how you will compute the median
+        for each cluster.\\
+
+        Given a cluster $K$ with $X$ data points $X = [x_1, x_2, ... , x_n]$ where $x_i \in \mathbb{R}^d$, the centroid recomputation for $K$ will be based on the median of each dimension.\\
+
+        For each dimension $d$, sort the values of $X$ along $d$. The median, $Med(X^d)$, is calculated as:
+        
+        \[Med(X^d) = \begin{cases}
+         X [\frac{n+1}{2}] \text{ if n is odd} \\\\
+         \frac{X[\frac{n}{2}] + X[\frac{n}{2} + 1]}{2}] \text{ if n is even}
+        \end{cases}\]
+
+        Compute the median independently for each dimension $d$, resulting in a new centroid \\
+        $(Med(X^1), Med(X^2),..., Med(X^d))$ for the cluster.\\
+
+
+        \item (6 points) Does K-medians help to avoid the outlier
+        problem? Justify your answer.\\
+
+        Yes, K-medians helps to avoid the influence of outliers because the median is not as affected by outliers as the mean. In K-medians clustering, using the median to determine the cluster centroid makes it more robust to extreme values, whereas K-means, which relies on the mean, can have its centroids skewed by outliers.
+
+    \end{enumerate}
+    
+
+    \item (30 points) \textbf{ Principal Components Analysis}
+    
+    Given three data points: $(-1, -1), (0,0), (1,1)$.
+
+    \begin{enumerate}
+        \item (10 points) Show the first Principal Component
+        (actual vector) without using Eigendecomposition. Justify
+        your answer.
+
+        \begin{itemize}
+            \item \textbf{Step 1: Calculate the mean}
+
+            \[(\frac{-1+0+1}{3}, \frac{-1+0+1}{3}) = (0,0)\]
+
+            \item \textbf{Step 2: Subtract the mean out of each point}
+
+            \[\textbf{(-1, -1): } (-1, -1) - (0, 0) = (-1, -1)\]
+            \[\textbf{(0,0): } (0,0) - (0, 0) = (0,0)\]
+            \[\textbf{(1, 1): } (1, 1) - (0, 0) = (1, 1)\]
+
+            \item \textbf{Step 3: Find vector along the maximum distance in the positive direction}
+
+            \[\text{(1, 1)  vector along maximum variance.}\]
+
+            \item \textbf{Step 4: Normalize vector by dividing it by its magnitude to have a unit vector for direction.}
+
+            \[\textbf{(1, 1) Magnitude: } \sqrt{1^2 + 1^2} = \sqrt{2}\]
+    
+            \[\textbf{Normalized Vector: } (1, 1) \div \sqrt{2} = [\frac{1}{\sqrt{2}}, \frac{1}{\sqrt{2}}]\]\\
+
+            \item The $1^{st}$ principle component is $[\frac{1}{\sqrt{2}}, \frac{1}{\sqrt{2}}]^T$.
+
+        \end{itemize}
+        
+        \item (10 points) If use the $1^{st}$ principle component
+        to transform the data into 1-d space. What are the new
+        data?
+
+        \begin{itemize}
+            \item \textbf{Step 5: Use the $1^{st}$ principle component
+        to transform the data into 1-d space}
+
+            \[\textbf{(-1, -1): } (-1, -1) \cdot [\frac{1}{\sqrt{2}}, \frac{1}{\sqrt{2}}]^T = \frac{-2}{\sqrt{2}} = -\sqrt{2}\]
+            \[\textbf{(0,0): } (0,0) \cdot [\frac{1}{\sqrt{2}}, \frac{1}{\sqrt{2}}]^T = 0\]
+            \[\textbf{(1, 1): } (1, 1) \cdot [\frac{1}{\sqrt{2}}, \frac{1}{\sqrt{2}}]^T = \frac{2}{\sqrt{2}} = \sqrt{2}\]
+
+        \textbf{The new data is:} $-\sqrt{2}, 0, \sqrt{2}$
+            
+        \end{itemize}
+    
+
+    \end{enumerate}
+
+
+
+\end{enumerate}
+
+\end{document}
