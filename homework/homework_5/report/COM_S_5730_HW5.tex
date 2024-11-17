@@ -1,0 +1,449 @@
+\documentclass[11pt]{article}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{amsmath,amsthm,amssymb,multirow,paralist}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{hyperref}
+
+\begin{document}
+
+\begin{center}
+{\Large \textbf{COM S 5730 Homework 5}}\\
+
+\linethickness{1mm}\line(1,0){498}
+
+\begin{enumerate}
+\item Please put required code files and report into a
+compressed file ``HW5\_FirstName\_LastName.zip''
+\item Unlimited number of submissions are
+allowed on Canvas and the latest one will be graded.
+\item Due: \textbf{Tuesday Nov. 19, 2024 at 11:59pm.}
+\item {\color{red}No later submission is accepted.}
+\item Please read and follow submission instructions. No exception will be made to accommodate incorrectly submitted files/reports.
+\item All students are required to typeset their reports using latex. Overleaf
+(\url{https://www.overleaf.com/learn/latex/Tutorials}) can be a good start.
+\end{enumerate}
+
+\linethickness{1mm}\line(1,0){498}
+
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{enumerate}
+
+    \item (15 points) Given the convolutional neural network block as below
+    \begin{center}
+        \vspace{-10pt}
+        \includegraphics[width=0.45\textwidth]{images/cnnblock.pdf}
+    \end{center}
+    Given the input feature maps $\boldsymbol X \in
+    \mathbb{R}^{64\times 64 \times 128}$, all convolutional
+    layers perform zero-padding of $1$ on each side of $H$ and
+    $W$ dimensions.
+    \begin{enumerate}
+    \item (15 points) What is the total number of parameters in
+    the block (you can skip bias terms)?\\
+
+    \textbf{Answer: }
+
+    \begin{itemize}
+        \item $1^{st}$ Convolution Layer
+
+            \[\begin{aligned}
+                  \text{Number of parameters} &= (n \text{ input channels} \times K_h \times K_w \times n \text{ output channels})\\[5pt]
+                  &= 128 \times 3 \times 3 \times 256\\[5pt]
+                  &= 294,912
+            \end{aligned}\]
+            
+        \item $2^{nd}$ Convolution Layer
+
+            \[\begin{aligned}
+                  \text{Number of parameters} &= (n \text{ input channels} \times K_h \times K_w \times n \text{ output channels})\\[5pt]
+                  &= 256 \times 3 \times 3 \times 512\\[5pt]
+                  &= 1,179,648
+            \end{aligned}\]
+
+        \item Total Number of Parameters
+
+            \[\begin{aligned}
+                &= 294,912 + 1,179,648\\[5pt]
+                &= 1,474,560
+            \end{aligned}\]
+    \end{itemize}
+
+    \textbf{Conclusion:} There is a total of 1,474,560 parameters in the convolutional block.
+    \end{enumerate}
+
+    
+    \item (20 points) Using batch normalization in neural networks requires computing
+    the mean and variance of a tensor. Suppose a batch normalization
+    layer takes vectors $z_1,z_2,\cdots,z_m$ as input, where $m$ is the
+    mini-batch size. It computes $\hat z_1,\hat z_2,\cdots,\hat z_m$
+    according to $$\hat z_i=\frac{z_i-\mu}{\sqrt{\sigma^2+\epsilon}}$$
+    where $$\mu=\frac{1}{m}\sum_{i=1}^m
+    z_i,\,\,\,\sigma^2=\frac{1}{m}\sum_{i=1}^m(z_i-\mu)^2.$$ It then
+    applies a second transformation to obtain $\tilde z_1,\tilde
+    z_2,\cdots,\tilde z_m$ using learned parameters $\gamma$ and $\beta$
+    as $$\tilde z_i=\gamma \hat z_i+\beta.$$ In this question, you can
+    assume that $\epsilon=0$.
+    
+    \begin{enumerate}
+    \item (5 points) You forward-propagate a mini-batch of $m=4$ examples in your network. Suppose you are at a batch normalization layer, where the
+    immediately previous layer is a fully connected layer with $3$ units. Therefore, the input to this batch normalization layer can be
+    represented as the below matrix:
+    $$\begin{bmatrix}
+    12&14&14&12\\
+    0&10&10&0\\
+    -5&5&5&-5
+    \end{bmatrix}$$ What are $\hat z_i$? Please express your answer in a $3\times 4$ matrix.\\
+
+    \textbf{Answer: }
+
+    \begin{itemize}
+        \item \textbf{Calculating for} $z_1 = \begin{bmatrix}
+            12&14&14&12
+        \end{bmatrix}$
+
+        \begin{enumerate}
+            \item $\mu$ of $z_1$:
+            \[\mu = \frac{(12 + 14 + 14 + 12)}{4} = \frac{52}{4} = 13\]
+
+            \item $\sigma^2$ of $z_1$:
+            \[\sigma^2 = \frac{((12-13)^2+(14-13)^2+(14-13)^2+(12-13)^2)}{4} = \frac{(1 + 1 + 1 + 1)}{4} = 1\]
+        \end{enumerate}
+
+        $\hat{z_1} = \begin{bmatrix}
+            \frac{12-13}{\sqrt{1+0}}&\frac{14-13}{\sqrt{1+0}}&\frac{14-13}{\sqrt{1+0}}&\frac{12-13}{\sqrt{1+0}}\end{bmatrix} = \begin{bmatrix}
+                -1&1&1&-1
+            \end{bmatrix}$\\\\
+
+        \item \textbf{Calculating for} $z_2 = \begin{bmatrix}
+            0&10&10&0
+        \end{bmatrix}$
+
+        \begin{enumerate}
+            \item $\mu$ of $z_2$:
+            \[\mu = \frac{(0 + 10 + 10 + 0)}{4} = \frac{20}{4} = 5\]
+
+            \item $\sigma^2$ of $z_2$:
+            \[\sigma^2 = \frac{((0-5)^2+(10-5)^2+(10-5)^2+(0-5)^2)}{4} = \frac{(25 + 25 + 25 + 25)}{4} = 25\]
+        \end{enumerate}
+
+        $\hat{z_2} = \begin{bmatrix}
+            \frac{0-5}{\sqrt{25+0}}&\frac{10-5}{\sqrt{25+0}}&\frac{10-5}{\sqrt{25+0}}&\frac{0-5}{\sqrt{25+0}}\end{bmatrix} = \begin{bmatrix}
+                -1&1&1&-1
+            \end{bmatrix}$\\\\
+
+        \item \textbf{Calculating for} $z_3 = \begin{bmatrix}
+            -5&5&5&-5
+        \end{bmatrix}$
+
+        \begin{enumerate}
+            \item $\mu$ of $z_3$:
+            \[\mu = \frac{(-5 + 5 + 5 + (-5))}{4} = \frac{0}{4} = 0\]
+
+            \item $\sigma^2$ of $z_3$:
+            \[\sigma^2 = \frac{((-5-0)^2+(5-0)^2+(5-0)^2+(-5-0)^2)}{4} = \frac{(25 + 25 + 25 + 25)}{4} = 25\]
+        \end{enumerate}
+
+        $\hat{z_3} = \begin{bmatrix}
+            \frac{-5-0}{\sqrt{25+0}}&\frac{5-0}{\sqrt{25+0}}&\frac{5-0}{\sqrt{25+0}}&\frac{-5-0}{\sqrt{25+0}}\end{bmatrix} = \begin{bmatrix}
+                -1&1&1&-1
+            \end{bmatrix}$\\\\
+    \end{itemize}
+
+    \textbf{Final Result: } $\hat{z_i} = \begin{bmatrix}
+        -1&1&1&-1\\-1&1&1&-1\\-1&1&1&-1
+    \end{bmatrix}$\\\\
+    
+    \item (5 points) Continue with the above setting. Suppose
+    $\gamma=(1,1,1)$, and $\beta=(0,-10,10)$. What are $\tilde
+    z_i$? Please express your answer in a $3\times 4$ matrix.
+
+    \textbf{Answer: }
+
+    \begin{itemize}
+        \item \textbf{First Row: }
+        $\gamma = 1$, $\beta = 0$\\
+        \[\tilde z_1 = 1 \times \begin{bmatrix}
+            -1&1&1&-1
+        \end{bmatrix} + 0 = \begin{bmatrix}
+            -1&1&1&-1
+        \end{bmatrix}\]
+    \end{itemize}
+
+    \begin{itemize}
+        \item \textbf{Second Row: }
+        $\gamma = 1$, $\beta = -10$\\
+        \[\tilde z_2 = 1 \times \begin{bmatrix}
+            -1&1&1&-1
+        \end{bmatrix} -10 = \begin{bmatrix}
+            -11&-9&-9&-11
+        \end{bmatrix}\]
+    \end{itemize}
+
+    \begin{itemize}
+        \item \textbf{Third Row: }
+        $\gamma = 1$, $\beta = 10$\\
+        \[\tilde z_3 = 1 \times \begin{bmatrix}
+            -1&1&1&-1
+        \end{bmatrix} + 10 = \begin{bmatrix}
+            9&11&11&9
+        \end{bmatrix}\]\\
+    \end{itemize}
+
+    \textbf{Final Result: } $\tilde z_i = \begin{bmatrix}
+        -1&1&1&-1\\-11&-9&-9&-11\\9&11&11&9
+    \end{bmatrix}$\\\\
+    
+    \item (5 points) Describe the differences of computations required for batch normalization
+    during training and testing.
+
+    \textbf{Answer: }
+    \begin{itemize}
+        \item \textbf{Training Phase}:
+   \begin{itemize}
+       \item Computes the mean and variance of each batch and normalizes using these batch statistics:
+       \[\hat{z}_i = \frac{z_i - \mu_{\text{batch}}}{\sqrt{\sigma_{\text{batch}}^2 + \epsilon}}\]
+       \item Updates moving averages of mean and variance for use during testing.\\
+   \end{itemize}
+
+    \item \textbf{Testing Phase}:
+   \begin{itemize}
+       \item Uses pre-computed moving averages from training for mean and variance.
+       \item Normalizes as:
+       \[\hat{z}_i = \frac{z_i - \mu_{\text{moving}}}{\sqrt{\sigma_{\text{moving}}^2 + \epsilon}}\]
+   \end{itemize}
+   \end{itemize}
+
+\textbf{Key Difference}: Training computes statistics per batch, while testing uses moving averages for faster, consistent normalization.\\
+
+    \item (5 points) Describe how the batch size during testing affect testing results.\\
+
+    The testing batch size has no affect on testing results.
+    
+    \end{enumerate}
+    
+    \item (35 points) We investigate the back-propagation of the convolution using a simple example. In this problem, we focus on the convolution operation without any normalization and
+    activation function. For simplicity, we consider the
+    convolution in 1D cases. Given 1D inputs with a spatial size of $4$ and $2$ channels, \emph{i.e.},
+    \begin{equation}
+    X=
+    \begin{bmatrix}
+    x_{11} & x_{12} & x_{13} & x_{14} \\
+    x_{21} & x_{22} & x_{23} & x_{24}
+    \end{bmatrix}
+    \in \mathbb{R}^{2 \times 4},
+    \end{equation}
+    we perform a 1D convolution with a kernel size of $3$ to produce output $Y$ with $2$ channels. No padding is involved. It is easy to see
+    \begin{equation}
+    Y=
+    \begin{bmatrix}
+    y_{11} & y_{12} \\
+    y_{21} & y_{22}
+    \end{bmatrix}
+    \in \mathbb{R}^{2 \times 2},
+    \end{equation}
+    where each row corresponds to a channel. There are 12
+    training parameters involved in this convolution, forming 4
+    different kernels of size $3$:
+    \begin{equation}
+    W^{ij} = [w^{ij}_1, w^{ij}_2, w^{ij}_3], i=1,2, j=1,2,
+    \end{equation}
+    where $W^{ij}$ scans the $i$-th channel of inputs and
+    contributes to the $j$-th channel of outputs.
+
+
+    \begin{enumerate}
+    \item (15 points) Now we flatten $X$ and $Y$ to vectors as
+    \begin{eqnarray}
+    &&\tilde X = [x_{11}, x_{12}, x_{13}, x_{14} , x_{21}, x_{22}, x_{23}, x_{24}]^T \nonumber \\
+    &&\tilde Y = [y_{11}, y_{12}, y_{21}, y_{22}]^T \nonumber
+    \end{eqnarray}
+    Please write the convolution in the form of fully connected layer as $\tilde Y=A\tilde X$ using the notations above. You can assume there is no bias term.\\Hint: Note that we discussed how to view convolution layers as fully connected
+    layers in the case of single input and output feature maps. This example asks you to extend that to the case of multiple input and output feature maps.\\
+
+    \textbf{Answer: }
+
+    \[
+    y_{11} = X_{11}w_1^{11} + X_{12}w_2^{11} + X_{13}w_3^{11} +  
+             X_{21}w_1^{21} + X_{22}w_2^{21} + X_{23}w_3^{21}     
+    \]
+    \[
+    y_{12} = X_{12}w_1^{11} + X_{13}w_2^{11} + X_{14}w_3^{11} +  
+             X_{22}w_1^{21} + X_{23}w_2^{21} + X_{24}w_3^{21}     
+    \]
+    \[
+    y_{21} = X_{21}w_1^{22} + X_{22}w_2^{22} + X_{23}w_3^{22} +  
+             X_{11}w_1^{12} + X_{12}w_2^{12} + X_{13}w_3^{12}     
+    \]
+    \[
+    y_{22} = X_{22}w_1^{22} + X_{23}w_2^{22} + X_{24}w_3^{22} +  
+             X_{12}w_1^{12} + X_{13}w_2^{12} + X_{14}w_3^{12}     
+    \]
+         
+         \[\tilde Y = A \tilde X\] 
+         where   
+        \[A=\begin{bmatrix}
+            w_1^{11}&w_2^{11}&w_3^{11}&0&w_1^{21}&w_2^{21}&w_3^{21}&0\\
+            0&w_1^{11}&w_2^{11}&w_3^{11}&0&w_1^{21}&w_2^{21}&w_3^{21}\\
+            w_1^{12}&w_2^{12}&w_3^{12}&0&w_1^{22}&w_2^{22}&w_3^{22}&0\\
+            0&w_1^{12}&w_2^{12}&w_3^{12}&0&w_1^{22}&w_2^{22}&w_3^{22}\\
+        \end{bmatrix} \text{, } \tilde X = \begin{bmatrix}
+            x_{11}\\x_{12}\\x_{13}\\x_{14}\\x_{21}\\x_{22}\\x_{23}\\x_{24}
+        \end{bmatrix}\]
+
+        \[\tilde Y = \begin{bmatrix}
+            w_1^{11}&w_2^{11}&w_3^{11}&0&w_1^{21}&w_2^{21}&w_3^{21}&0\\
+            0&w_1^{11}&w_2^{11}&w_3^{11}&0&w_1^{21}&w_2^{21}&w_3^{21}\\
+            w_1^{12}&w_2^{12}&w_3^{12}&0&w_1^{22}&w_2^{22}&w_3^{22}&0\\
+            0&w_1^{12}&w_2^{12}&w_3^{12}&0&w_1^{22}&w_2^{22}&w_3^{22}\\
+        \end{bmatrix} \times \begin{bmatrix}
+            x_{11}\\x_{12}\\x_{13}\\x_{14}\\x_{21}\\x_{22}\\x_{23}\\x_{24}
+        \end{bmatrix}\]
+
+
+
+    \item (10 points) Next, for the back-propagation, assume we've already computed the gradients of loss $L$ with respect to
+    $\tilde Y$:
+    \begin{equation}
+    \frac{\partial L}{\partial \tilde Y}=\left [\frac{\partial L}{\partial y_{11}}, \frac{\partial L}{\partial y_{12}}, \frac{\partial L}{\partial y_{21}}, \frac{\partial L}{\partial y_{22}} \right ]^T,
+    \end{equation}
+    Please write the back-propagation step of the convolution in
+    the form of $\frac{\partial L}{\partial \tilde
+    X}=B\frac{\partial L}{\partial \tilde Y}.$ Explain the
+    relationship between $A$ and $B$.
+
+    \textbf{Answer: }
+
+    \[
+    \begin{aligned}
+    \frac{\partial L}{\partial\tilde X} &= B\frac{\partial L}{\partial \tilde Y}\\[8pt]
+    \frac{\partial L}{\partial\tilde X} &= \left(\frac{\partial \tilde Y}{\partial \tilde X}\right)^T \frac{\partial L}{\partial \tilde Y} \text{,} \quad \text{ where } \frac{\partial \tilde Y}{\partial \tilde X} = A\\[8pt]
+    \frac{\partial L}{\partial\tilde X} &= A^T \frac{\partial L}{\partial \tilde Y}\\[8pt]
+    \frac{\partial L}{\partial\tilde X} &= \begin{bmatrix}
+
+            w_1^{11}&0&w_1^{12}&0\\[5pt]
+            w_2^{11}&w_1^{11}&w_2^{12}&w_1^{12}\\[5pt]
+            w_3^{11}&w_2^{11}&w_3^{12}&w_2^{12}\\[5pt]
+            0&w_3^{11}&0&w_3^{12}&\\[5pt]
+            w_1^{21}&0&w_1^{22}&0\\[5pt]
+            w_2^{21}&w_1^{21}&w_2^{22}&w_1^{22}\\[5pt]
+            w_3^{21}&w_2^{21}&w_3^{22}&w_2^{22}\\[5pt]
+            0&w_3^{21}&0&w_3^{22}
+        \end{bmatrix} \times \begin{bmatrix}
+        \frac{\partial L}{\partial y_{11}}\\[5pt]
+        \frac{\partial L}{\partial y_{12}}\\[5pt]
+        \frac{\partial L}{\partial y_{21}}\\[5pt]
+        \frac{\partial L}{\partial y_{22}}
+        \end{bmatrix}
+    \end{aligned}
+    \]
+
+    Therefore, $B = A^T$. The matrix $B$ used in the back-propagation step is the transpose of the matrix $A$ from the forward pass.\\
+
+    \item (10 points) While the forward propagation of the
+    convolution on $X$ to $Y$ could be written into $\tilde
+    Y=A\tilde X$, could you figure out whether $\frac{\partial
+    L}{\partial \tilde X}=B\frac{\partial L}{\partial \tilde Y}$ also corresponds to a convolution on $\frac{\partial
+    L}{\partial Y}$ to $\frac{\partial L}{\partial X}$? If yes, write down the kernels for this convolution. If no, explain why.\\
+
+    \textbf{Answer: }
+
+    Yes, $\frac{\partial L}{\partial \tilde X} = B \frac{\partial L}{\partial \tilde Y}$ corresponds to a convolutional from $\frac{\partial L}{\partial Y}$ to $\frac{\partial L}{\partial X}$. The backward convolution uses the flipped kernels from the forward pass. $\newline$
+
+    \textbf{Padding} \( \frac{\partial L}{\partial Y} \) \textbf{as follows}:
+
+    \[
+    \begin{bmatrix}
+    0 & \frac{\partial L}{\partial y_{11}} & \frac{\partial L}{\partial y_{12}} & 0 \\
+    0 & \frac{\partial L}{\partial y_{21}} & \frac{\partial L}{\partial y_{22}} & 0
+    \end{bmatrix}
+    \]
+
+    \textbf{Kernels for the backward convolutional:}
+
+    \begin{itemize}
+        \item From Input Channel 1:
+        \begin{itemize}
+            \item $W_{Flipped}^{11} = \left [W_3^{11}, W_2^{11}, W_1^{11} \right ]$
+            \item $W_{Flipped}^{12} = \left [W_3^{12}, W_2^{12}, W_1^{12} \right ]$
+        \end{itemize}
+        \item From Input Channel 2:
+        \begin{itemize}
+            \item $W_{Flipped}^{21} = \left [W_3^{21}, W_2^{21}, W_1^{21} \right ]$
+            \item $W_{Flipped}^{22} = \left [W_3^{22}, W_2^{22}, W_1^{22} \right ]$
+        \end{itemize}
+    \end{itemize}
+
+    \end{enumerate}
+    
+    
+    \item (30 points) \textbf{LeNet for Image Recognition:} In
+    this coding assignment, you will need to complete the
+    implementation of LeNet (LeCun Network) using PyTorch and apply the LeNet to the image recognition task on Cifar-10 (10-classes classification). You will need to install the python packages ``tqdm'' and ``pytorch''. Please read the installation guides of PyTorch here
+    (https://pytorch.org/get-started/locally/). You are expected to implement your solution based on the given codes. The only file you need to modify is the ``solution.py'' file. You can test your solution by running the ``main.py'' file.
+    
+    \begin{enumerate}
+    \item (20 points) Complete the class \emph{\textbf{LeNet()}}.
+    In particular, define operations in function
+    \emph{\textbf{\_\_init\_\_()}} and use them in function
+    \emph{\textbf{forward()}}. The input of
+    \emph{\textbf{forward()}} is an image. The paper for LeNet
+    can be found here
+    (http://yann.lecun.com/exdb/publis/pdf/lecun-01a.pdf)
+    
+    The network architecture is shown in the figure below.
+    \begin{center}
+    \includegraphics[scale=0.18]{images/LeNet.png}
+    \end{center}
+    
+    The sub-sampling is implemented by using the max pooling. And
+    the kernel size for all the convolutional layers are $5\times
+    5$. Please use \emph{\textbf{ReLU}} function to activate the
+    outputs of convolutional layers and the first two
+    fully-connected layers. The sequential layers are:
+    \begin{align*}
+    &\text{Inputs} \to \\
+    &\text{Convolution (6 out channels)} \to \text{Max Pooling} \to \\
+    &\text{Convolution (16 out channels)}\to \text{Max Pooling}\to\\
+    &\text{Reshape to vector}\to \text{Fully-connected (120 out units)}\to \\
+    &\text{Fully-connected (84 out units)}\to \text{Outputs (n\_classes out units)}
+    \end{align*}
+    
+    For this part, you are only allowed to use the APIs in
+    \emph{\textbf{torch.nn}}. Please refer to the PyTorch API documents below for the usage of those APIs before you use them: \\
+    https://pytorch.org/docs/stable/nn.html.
+
+    Run the model by ``\emph{\textbf{python main.py}}'' and
+    report the testing performance as well as a short analysis of
+    the results.\\
+
+    \textbf{Answer:}
+
+    Accuracy of the network on the 10000 test set: 64.70\%.
+    
+    The model shows constant improvement in training, with the loss decreasing and accuracy increasing from 22.91\% to 76.52\% over 20 epochs, indicating effective learning. However, the test accuracy of 64.70\% shows a performance gap, suggesting potential overfitting. To enhance generalization and close this gap, I will introduce batch normalization to the process in the next iteration.
+
+    
+
+
+    \item (10 points) Add batch normalization operations after
+    each max pooling layer. Run the model by
+    ``\emph{\textbf{python main.py}}'' and report the testing performance as well as a short analysis of the results.\\
+
+    \textbf{Answer:}
+
+    Accuracy of the network on the 10000 test set: 65.00\%
+    
+    Adding batch normalization after the max pooling layers resulted in a significant improvement in training performance, with the training loss decreasing more rapidly and the accuracy increasing from 39.72\% to 80.22\% over 20 epochs. The test accuracy also improved slightly, reaching 65.00\%, compared to earlier run. 
+    
+    \end{enumerate}
+    
+    \end{enumerate}
+
+\end{document}
